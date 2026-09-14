@@ -10,6 +10,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    private var appCoordinator: AppCoordinator?
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -17,19 +18,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        let  window = UIWindow(windowScene: windowScene)
-        // TEMP (UI step): shows the screen with sample data. Replaced by
-        // AppCoordinator + FlightResultsViewModel in a later step (spec ARCH-05).
-        let rootViewController = FlightResultsViewController()
-        #if DEBUG
-        FlightResultsPreview.attach(to: rootViewController)
-        #endif
+        let window = UIWindow(windowScene: windowScene)
+        self.window = window
 
-        let navigationController = UINavigationController(rootViewController: rootViewController)
+        let navigationController = UINavigationController()
         navigationController.setNavigationBarHidden(true, animated: false)
         window.rootViewController = navigationController
-        self.window = window
         window.makeKeyAndVisible()
+
+        let coordinator = AppCoordinator(navigationController: navigationController, dependencies: .make())
+        appCoordinator = coordinator
+        coordinator.start()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

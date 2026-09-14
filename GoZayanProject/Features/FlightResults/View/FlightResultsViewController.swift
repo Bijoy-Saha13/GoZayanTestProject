@@ -5,17 +5,12 @@
 
 import UIKit
 
-/// Flight Results screen. Renders `FlightResultsState` and reports user intents
-/// through closures. It holds no business logic, never calls the API, never
-/// sorts, and never navigates — whoever owns the screen wires the closures.
+/// Flight Results screen. Renders the ViewModel's `FlightResultsState` and forwards
+/// user intents to it. It holds no business logic: it never calls the API, never
+/// sorts, and never navigates.
 final class FlightResultsViewController: UIViewController {
 
-    // MARK: - Outputs
-
-    var onRetry: (() -> Void)?
-    var onSortSelected: ((SortOption) -> Void)?
-    var onFlightSelected: ((FlightCardViewData.ID) -> Void)?
-    var onPromoLearnMore: ((PromoViewData.ID) -> Void)?
+    private let viewModel: FlightResultsViewModel
 
     // MARK: - Collection view model
 
@@ -62,27 +57,34 @@ final class FlightResultsViewController: UIViewController {
 
     // MARK: - Lifecycle
 
+    init(viewModel: FlightResultsViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Theme.Colors.background
         setUpViews()
         setUpConstraints()
         configureDataSource()
-        applyState(animated: false)
+
+        headerView.configure(with: viewModel.header)
+        dateChips = viewModel.dateChips
+        promos = viewModel.promos
+        viewModel.onStateChange = { [weak self] state in
+            self?.render(state)
+        }
+        viewModel.load()
     }
 
     // MARK: - Rendering
 
-    func configure(header: RouteHeaderViewData, dateChips: [DateChipViewData], promos: [PromoViewData]) {
-        loadViewIfNeeded()
-        headerView.configure(with: header)
-        self.dateChips = dateChips
-        self.promos = promos
-        applyState(animated: false)
-    }
-
-    func render(_ state: FlightResultsState) {
-        loadViewIfNeeded()
+    private func render(_ state: FlightResultsState) {
         let isSameKind = state.kind == self.state.kind
         let sortChanged = state.selectedSort != nil && state.selectedSort != self.state.selectedSort
         self.state = state
@@ -190,7 +192,7 @@ final class FlightResultsViewController: UIViewController {
         let menu = SortDropdownView(options: SortOption.allCases, selected: selectedSort)
         menu.onSelect = { [weak self] option in
             self?.dismissSortMenu()
-            self?.onSortSelected?(option)
+            self?.viewModel.selectSort(option)
         }
 
         [dismissControl, menu].forEach {
@@ -235,7 +237,7 @@ final class FlightResultsViewController: UIViewController {
 
     private func setUpViews() {
         sortFilterBar.onSortTap = { [weak self] in self?.toggleSortMenu() }
-        stateMessageView.onAction = { [weak self] in self?.onRetry?() }
+        stateMessageView.onAction = { [weak self] in self?.viewModel.retry() }
 
         collectionView.backgroundColor = .clear
         collectionView.delegate = self
@@ -282,7 +284,7 @@ final class FlightResultsViewController: UIViewController {
         }
         let promoRegistration = UICollectionView.CellRegistration<PromoCardCell, PromoViewData> { [weak self] cell, _, promo in
             cell.configure(with: promo)
-            cell.onLearnMore = { self?.onPromoLearnMore?(promo.id) }
+            cell.onLearnMore = { self?.viewModel.didTapLearnMore(promoID: promo.id) }
         }
 
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, item in
@@ -356,7 +358,7 @@ extension FlightResultsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         guard case .offer(let offer) = dataSource?.itemIdentifier(for: indexPath) else { return }
-        onFlightSelected?(offer.id)
+        viewModel.didSelectOffer(id: offer.id)
     }
 }
 

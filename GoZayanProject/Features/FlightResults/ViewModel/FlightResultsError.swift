@@ -16,6 +16,24 @@ nonisolated enum FlightResultsError: Error, Hashable, Sendable {
     case invalidResponse
 }
 
+nonisolated extension FlightResultsError {
+    /// Maps service/transport failures to what the user is told.
+    init(_ error: Error) {
+        switch error as? RequestError {
+        case .offline:
+            self = .offline
+        case .unauthorized:
+            self = .unauthorized
+        case .rateLimited:
+            self = .quotaExceeded
+        case .decoding, .invalidResponse:
+            self = .invalidResponse
+        case .invalidURL, .transport, .server, .none:
+            self = .server
+        }
+    }
+}
+
 nonisolated struct StateMessage: Hashable, Sendable {
     let title: String
     let message: String
