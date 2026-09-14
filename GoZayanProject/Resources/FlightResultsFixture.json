@@ -1,0 +1,672 @@
+{
+  "search_metadata": {
+    "status": "Success"
+  },
+  "search_parameters": {
+    "engine": "google_flights",
+    "hl": "en",
+    "gl": "us",
+    "type": "2",
+    "departure_id": "DAC",
+    "arrival_id": "BKK",
+    "outbound_date": "2026-10-15",
+    "adults": 1,
+    "currency": "USD"
+  },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-15 10:00"
+          },
+          "arrival_airport": {
+            "name": "Suvarnabhumi Airport",
+            "id": "BKK",
+            "time": "2026-10-15 13:40"
+          },
+          "duration": 160,
+          "airplane": "Boeing 737",
+          "airline": "US-Bangla Airlines",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/BS.png",
+          "travel_class": "Economy",
+          "flight_number": "BS 217",
+          "legroom": "29 in",
+          "extensions": [
+            "Below average legroom (29 in)",
+            "Carbon emissions estimate: 134 kg"
+          ],
+          "often_delayed_by_over_30_min": true
+        }
+      ],
+      "total_duration": 160,
+      "carbon_emissions": {
+        "this_flight": 135000,
+        "typical_for_this_route": 150000,
+        "difference_percent": -10
+      },
+      "price": 297,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/BS.png"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-15 02:45"
+          },
+          "arrival_airport": {
+            "name": "Suvarnabhumi Airport",
+            "id": "BKK",
+            "time": "2026-10-15 06:15"
+          },
+          "duration": 150,
+          "airplane": "Airbus A321neo",
+          "airline": "THAI",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/TG.png",
+          "travel_class": "Economy",
+          "flight_number": "TG 340",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat USB outlet",
+            "On-demand video",
+            "Carbon emissions estimate: 148 kg"
+          ],
+          "overnight": true
+        }
+      ],
+      "total_duration": 150,
+      "carbon_emissions": {
+        "this_flight": 148000,
+        "typical_for_this_route": 150000,
+        "difference_percent": -1
+      },
+      "price": 412,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/TG.png"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-15 11:00"
+          },
+          "arrival_airport": {
+            "name": "Suvarnabhumi Airport",
+            "id": "BKK",
+            "time": "2026-10-15 14:45"
+          },
+          "duration": 165,
+          "airplane": "Boeing 787",
+          "airline": "Biman",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/BG.png",
+          "travel_class": "Economy",
+          "flight_number": "BG 388",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat USB outlet",
+            "On-demand video",
+            "Carbon emissions estimate: 105 kg"
+          ],
+          "often_delayed_by_over_30_min": true
+        }
+      ],
+      "total_duration": 165,
+      "carbon_emissions": {
+        "this_flight": 106000,
+        "typical_for_this_route": 150000,
+        "difference_percent": -29
+      },
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/BG.png"
+    }
+  ],
+  "other_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-15 12:55"
+          },
+          "arrival_airport": {
+            "name": "Colombo Bandaranaike International Airport",
+            "id": "CMB",
+            "time": "2026-10-15 15:40"
+          },
+          "duration": 195,
+          "airplane": "Airbus A330",
+          "airline": "SriLankan",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UL.png",
+          "travel_class": "Economy",
+          "flight_number": "UL 190",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 155 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Colombo Bandaranaike International Airport",
+            "id": "CMB",
+            "time": "2026-10-16 07:35"
+          },
+          "arrival_airport": {
+            "name": "Suvarnabhumi Airport",
+            "id": "BKK",
+            "time": "2026-10-16 12:45"
+          },
+          "duration": 220,
+          "airplane": "Airbus A321 (Sharklets)",
+          "airline": "SriLankan",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UL.png",
+          "travel_class": "Economy",
+          "flight_number": "UL 404",
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "Wi-Fi for a fee",
+            "In-seat USB outlet",
+            "On-demand video",
+            "Carbon emissions estimate: 222 kg"
+          ]
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 955,
+          "name": "Colombo Bandaranaike International Airport",
+          "id": "CMB"
+        }
+      ],
+      "total_duration": 1370,
+      "carbon_emissions": {
+        "this_flight": 378000,
+        "typical_for_this_route": 150000,
+        "difference_percent": 152
+      },
+      "price": 303,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UL.png"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-15 12:55"
+          },
+          "arrival_airport": {
+            "name": "Colombo Bandaranaike International Airport",
+            "id": "CMB",
+            "time": "2026-10-15 15:40"
+          },
+          "duration": 195,
+          "airplane": "Airbus A330",
+          "airline": "SriLankan",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UL.png",
+          "travel_class": "Economy",
+          "flight_number": "UL 190",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 155 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Colombo Bandaranaike International Airport",
+            "id": "CMB",
+            "time": "2026-10-16 01:05"
+          },
+          "arrival_airport": {
+            "name": "Suvarnabhumi Airport",
+            "id": "BKK",
+            "time": "2026-10-16 06:15"
+          },
+          "duration": 220,
+          "airplane": "Airbus A320",
+          "airline": "SriLankan",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UL.png",
+          "travel_class": "Economy",
+          "flight_number": "UL 402",
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "Stream media to your device",
+            "Carbon emissions estimate: 228 kg"
+          ],
+          "overnight": true
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 565,
+          "name": "Colombo Bandaranaike International Airport",
+          "id": "CMB"
+        }
+      ],
+      "total_duration": 980,
+      "carbon_emissions": {
+        "this_flight": 384000,
+        "typical_for_this_route": 150000,
+        "difference_percent": 156
+      },
+      "price": 329,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UL.png"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-15 23:25"
+          },
+          "arrival_airport": {
+            "name": "Guangzhou Baiyun International Airport",
+            "id": "CAN",
+            "time": "2026-10-16 05:20"
+          },
+          "duration": 235,
+          "airplane": "Boeing 787",
+          "airline": "China Southern",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/CZ.png",
+          "travel_class": "Economy",
+          "flight_number": "CZ 392",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 158 kg"
+          ],
+          "overnight": true
+        },
+        {
+          "departure_airport": {
+            "name": "Guangzhou Baiyun International Airport",
+            "id": "CAN",
+            "time": "2026-10-16 08:15"
+          },
+          "arrival_airport": {
+            "name": "Suvarnabhumi Airport",
+            "id": "BKK",
+            "time": "2026-10-16 10:20"
+          },
+          "duration": 185,
+          "airplane": "Airbus A321neo",
+          "airline": "China Southern",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/CZ.png",
+          "travel_class": "Economy",
+          "flight_number": "CZ 357",
+          "legroom": "29 in",
+          "extensions": [
+            "Below average legroom (29 in)",
+            "In-seat USB outlet",
+            "Carbon emissions estimate: 141 kg"
+          ]
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 175,
+          "name": "Guangzhou Baiyun International Airport",
+          "id": "CAN"
+        }
+      ],
+      "total_duration": 595,
+      "carbon_emissions": {
+        "this_flight": 300000,
+        "typical_for_this_route": 150000,
+        "difference_percent": 100
+      },
+      "price": 474,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/CZ.png"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-15 13:35"
+          },
+          "arrival_airport": {
+            "name": "Suvarnabhumi Airport",
+            "id": "BKK",
+            "time": "2026-10-15 17:00"
+          },
+          "duration": 145,
+          "airplane": "Airbus A320",
+          "airline": "THAI",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/TG.png",
+          "travel_class": "Economy",
+          "flight_number": "TG 322",
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "Stream media to your device",
+            "Carbon emissions estimate: 165 kg"
+          ],
+          "often_delayed_by_over_30_min": true
+        }
+      ],
+      "total_duration": 145,
+      "carbon_emissions": {
+        "this_flight": 166000,
+        "typical_for_this_route": 150000,
+        "difference_percent": 11
+      },
+      "price": 495,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/TG.png"
+    }
+  ],
+  "price_insights": {
+    "lowest_price": 297,
+    "price_level": "high",
+    "typical_price_range": [
+      230,
+      270
+    ],
+    "price_history": [
+      [
+        1784224800,
+        217
+      ],
+      [
+        1784311200,
+        216
+      ],
+      [
+        1784397600,
+        216
+      ],
+      [
+        1784484000,
+        216
+      ],
+      [
+        1784570400,
+        216
+      ],
+      [
+        1784656800,
+        216
+      ],
+      [
+        1784743200,
+        216
+      ],
+      [
+        1784829600,
+        216
+      ],
+      [
+        1784916000,
+        215
+      ],
+      [
+        1785002400,
+        216
+      ],
+      [
+        1785088800,
+        216
+      ],
+      [
+        1785175200,
+        216
+      ],
+      [
+        1785261600,
+        216
+      ],
+      [
+        1785348000,
+        216
+      ],
+      [
+        1785434400,
+        216
+      ],
+      [
+        1785520800,
+        216
+      ],
+      [
+        1785607200,
+        216
+      ],
+      [
+        1785693600,
+        216
+      ],
+      [
+        1785780000,
+        216
+      ],
+      [
+        1785866400,
+        215
+      ],
+      [
+        1785952800,
+        216
+      ],
+      [
+        1786039200,
+        216
+      ],
+      [
+        1786125600,
+        216
+      ],
+      [
+        1786212000,
+        216
+      ],
+      [
+        1786298400,
+        216
+      ],
+      [
+        1786384800,
+        216
+      ],
+      [
+        1786471200,
+        216
+      ],
+      [
+        1786557600,
+        216
+      ],
+      [
+        1786644000,
+        217
+      ],
+      [
+        1786730400,
+        217
+      ],
+      [
+        1786816800,
+        218
+      ],
+      [
+        1786903200,
+        235
+      ],
+      [
+        1786989600,
+        235
+      ],
+      [
+        1787076000,
+        274
+      ],
+      [
+        1787162400,
+        276
+      ],
+      [
+        1787248800,
+        276
+      ],
+      [
+        1787335200,
+        275
+      ],
+      [
+        1787421600,
+        279
+      ],
+      [
+        1787508000,
+        279
+      ],
+      [
+        1787594400,
+        275
+      ],
+      [
+        1787680800,
+        274
+      ],
+      [
+        1787767200,
+        274
+      ],
+      [
+        1787853600,
+        274
+      ],
+      [
+        1787940000,
+        273
+      ],
+      [
+        1788026400,
+        273
+      ],
+      [
+        1788112800,
+        275
+      ],
+      [
+        1788199200,
+        291
+      ],
+      [
+        1788285600,
+        300
+      ],
+      [
+        1788372000,
+        295
+      ],
+      [
+        1788458400,
+        295
+      ],
+      [
+        1788544800,
+        294
+      ],
+      [
+        1788631200,
+        298
+      ],
+      [
+        1788717600,
+        298
+      ],
+      [
+        1788804000,
+        297
+      ],
+      [
+        1788890400,
+        298
+      ],
+      [
+        1788976800,
+        297
+      ],
+      [
+        1789063200,
+        296
+      ],
+      [
+        1789149600,
+        297
+      ],
+      [
+        1789236000,
+        303
+      ],
+      [
+        1789322400,
+        297
+      ],
+      [
+        1789408800,
+        297
+      ]
+    ]
+  },
+  "airports": [
+    {
+      "departure": [
+        {
+          "airport": {
+            "id": "DAC",
+            "name": "Hazrat Shahjalal International Airport"
+          },
+          "city": "Dhaka",
+          "country": "Bangladesh",
+          "country_code": "BD",
+          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNzsQoXEbAaQQmyeJYcjd7hcBPlqkA2k_ZemUV-nrPK9OSNkD9xSsmW2h7a61lfAHA0OV_F-TbeGfdkQ",
+          "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCf_Tg_Q3LODtV1aR31aBUkR5BPBE0UHmnuMa9pdzoFBtVyT8x5lnK6pqtBYFbRU35-NHmUqzuX1qjuFdHAVDiwaZXildvE-2dS4ifrzo"
+        }
+      ],
+      "arrival": [
+        {
+          "airport": {
+            "id": "BKK",
+            "name": "Suvarnabhumi Airport"
+          },
+          "city": "Bangkok",
+          "country": "Thailand",
+          "country_code": "TH",
+          "image": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTzC4xB5QxGqhLwOS5u7E8q-Ty8lX8lihfxKD-L1VCamrWDhR52VWvoBnPWydRUr7FEKiKwHfAU0sB9mg",
+          "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS-yAxs8ZWNi0M14W-4wO0ra1auEIiVtG0zy-C8CygMmIa2-MVy7L8vSTHNXJJnS_9lq_gL3BVaF6MQh6wBKzXzqexb7CZL29F6UQABXAY"
+        }
+      ]
+    }
+  ]
+}
