@@ -18,8 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let  window = UIWindow(windowScene: windowScene)
-        let rootViewController = HomeViewController()
-        
+        // TEMP (UI step): shows the screen with sample data. Replaced by
+        // AppCoordinator + FlightResultsViewModel in a later step (spec ARCH-05).
+        let rootViewController = FlightResultsViewController()
+        #if DEBUG
+        FlightResultsPreview.attach(to: rootViewController)
+        #endif
+
         let navigationController = UINavigationController(rootViewController: rootViewController)
         navigationController.setNavigationBarHidden(true, animated: false)
         window.rootViewController = navigationController
