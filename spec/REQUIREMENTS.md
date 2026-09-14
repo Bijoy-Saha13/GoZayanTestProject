@@ -2,7 +2,7 @@
 
 > **Source of truth:** *iOS Take-Home Task — Flight Results* (GoZayaan, PDF, 6 pages) + SerpApi docs + Figma reference.
 > **Approach:** Option A — this spec is written **before** any AI prompting and is committed first, so the git history shows the spec preceding the implementation.
-> **Status:** Draft v2 · 2026-09-15 — Figma captured (§13)
+> **Status:** v3 · 2026-09-15 — Figma captured (§13); implemented, with changes recorded in §17
 
 ---
 
@@ -655,3 +655,29 @@ The task is done when **all** of the following are true:
 - [ ] **DoD-19** Repo pushed and link sent within 3 days of receiving the task (DEL-01, DEL-06).
 - [ ] *(Optional)* **DoD-20** Cheapest/Fastest sort in ViewModel, list updates in place (EXT-*).
 - [ ] *(Optional)* **DoD-21** Unit tests for mapping (incl. 2 Stop), state transitions, sort — all green with stubbed network (T-*).
+
+---
+
+## 17. Changes made during implementation (v3 · 2026-09-15)
+
+Each change below was forced by something verified while building (live API call, compiler, simulator, or tests). The rows above keep their original wording so the history of the spec stays readable; this table wins where they differ.
+
+| Spec IDs | Change | Why |
+|---|---|---|
+| DATA-03, D-01, D-03 | Search currency is **USD**; prices read `USD 297`. | SerpApi rejects BDT: `HTTP 400 {"error": "Unsupported `BDT` for currency."}` — the brief's own example request fails. Currency is one value in `FlightSearchRequest.defaultSearch`. |
+| KEY-02, D-02 ✅ | Key lives in git-ignored `GoZayanProject/Config/Secrets.plist`, read by `APIKeyProvider`. Template: `Secrets.example.plist` at the repo root. No key in Debug → bundled fixture. | No project-file build settings to maintain, and a fresh clone without the file still builds (a missing xcconfig include would not). |
+| CACHE-01…04 | Cache is `CachingHTTPClient`, a decorator around `HTTPClient` that stores raw 2xx bodies in `Caches/HTTPResponseCache` for 24 h; file name = SHA-256 of the request **without** `api_key`. Debug only; `-FlightsBypassCache YES` skips it. | Raw bodies must be cached below the mapping step, so the decorator sits at the HTTP layer instead of wrapping the service. The service stays unaware of caching. |
+| §5.1 | `FlightSearchRequest.outboundDate` is a `CalendarDay`, not a `Date`; the request also carries city names for the header. | A calendar day has no time zone to get wrong. |
+| MAP-06, MAP-09 | An itinerary with neither `total_duration` nor leg durations is dropped. | A card can't show a duration it doesn't have. |
+| MAP-11 | Airport times are stored as `LocalDateTime` components (no `Date`). | The device time zone can't shift what is shown. |
+| §8.3 | `FlightResultsCoordinatorDelegate` gained `didSelectPromo(_:)`. | Learn more is the one real navigation event. |
+| UI-09 | `-FlightsStubState loading\|success\|empty\|error` swaps in `StubFlightSearchService`; the arguments are pre-listed (disabled) in the shared scheme. The UI-step preview harness was deleted. | Reviewers can see every state without editing code. |
+| D-13 ✅ | `FlightResultsCoordinator` presents `SFSafariViewController` for gozayaan.com. | In-app, and navigation stays in the Coordinator. |
+| A-01…A-07 ✅ | Network layer rewritten: `URLSessionHTTPClient` sends the built request, injects its session, maps 401/403/429/5xx and offline errors to `RequestError`, and never swallows decoding errors. `RequestError` no longer imports UIKit or holds UI copy. | See §11. |
+| A-10 ✅, ARCH-05 | `SceneDelegate` retains `AppCoordinator`; `AppDependencies` is the composition root. | |
+| §10.2, A-14 | **Unit tests dropped** (extra credit, optional). A test suite was written and passing, then removed at the candidate's request. No test target in the project. | The candidate chose not to submit tests they would not be able to explain on the walkthrough call. The ViewModel stays testable (Foundation only, dependencies injected). |
+
+Facts confirmed from the live response (`Resources/FlightResultsFixture.json`, scrubbed): non-stop itineraries **omit** `layovers`; an itinerary can **omit** `price`; overnight arrivals are common; the body never contains the API key.
+
+Still open: **D-15** — deployment target is still iOS 26.2.
+
