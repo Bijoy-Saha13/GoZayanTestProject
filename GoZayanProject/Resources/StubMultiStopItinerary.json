@@ -1,0 +1,75 @@
+{
+  "search_metadata": {
+    "status": "Success"
+  },
+  "other_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Hazrat Shahjalal International Airport",
+            "id": "DAC",
+            "time": "2026-10-15 09:00"
+          },
+          "arrival_airport": {
+            "name": "Netaji Subhash Chandra Bose International Airport",
+            "id": "CCU",
+            "time": "2026-10-15 09:40"
+          },
+          "duration": 70,
+          "airline": "US-Bangla Airlines",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/BS.png",
+          "flight_number": "BS 211"
+        },
+        {
+          "departure_airport": {
+            "name": "Netaji Subhash Chandra Bose International Airport",
+            "id": "CCU",
+            "time": "2026-10-15 12:30"
+          },
+          "arrival_airport": {
+            "name": "Indira Gandhi International Airport",
+            "id": "DEL",
+            "time": "2026-10-15 15:00"
+          },
+          "duration": 150,
+          "airline": "IndiGo",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/6E.png",
+          "flight_number": "6E 2345"
+        },
+        {
+          "departure_airport": {
+            "name": "Indira Gandhi International Airport",
+            "id": "DEL",
+            "time": "2026-10-15 23:50"
+          },
+          "arrival_airport": {
+            "name": "Suvarnabhumi Airport",
+            "id": "BKK",
+            "time": "2026-10-16 05:40"
+          },
+          "duration": 260,
+          "airline": "IndiGo",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/6E.png",
+          "flight_number": "6E 1053"
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 170,
+          "name": "Netaji Subhash Chandra Bose International Airport",
+          "id": "CCU"
+        },
+        {
+          "duration": 530,
+          "name": "Indira Gandhi International Airport",
+          "id": "DEL"
+        }
+      ],
+      "total_duration": 1180,
+      "price": 341,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/multi.png"
+    }
+  ]
+}

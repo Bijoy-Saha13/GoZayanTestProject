@@ -2,7 +2,7 @@
 
 > **Source of truth:** *iOS Take-Home Task — Flight Results* (GoZayaan, PDF, 6 pages) + SerpApi docs + Figma reference.
 > **Approach:** Option A — this spec is written **before** any AI prompting and is committed first, so the git history shows the spec preceding the implementation.
-> **Status:** v3 · 2026-09-15 — Figma captured (§13); implemented, with changes recorded in §17
+> **Status:** v4 · 2026-09-15 — Figma captured (§13); implemented, with changes recorded in §17; gaps closed and Definition of Done checked (§16)
 
 ---
 
@@ -22,7 +22,7 @@
 |---|---|
 | `[PDF p.N]` | Quoted or paraphrased from the task PDF, page N. |
 | `[API]` | From SerpApi documentation (serpapi.com/google-flights-api, /google-flights-results, /api-status-and-error-codes). |
-| `[FIGMA]` | Must be taken from the Figma file. **Not yet captured — see §13.** |
+| `[FIGMA]` | Must be taken from the Figma file. Captured in §13. |
 | `[DECISION]` | Left open on purpose by the task [PDF p.6]. Our choice + reason is in §12 and must be repeated in `NOTES.md`. |
 | `[AUDIT]` | Found while reviewing the existing codebase (§11). |
 
@@ -201,7 +201,7 @@ enum FlightResultsError: Equatable {
 | DATA-02 | One-way search: `type=2` (1 = round trip is the API default, so `type` **must** be sent). | MUST |
 | DATA-03 | Params sent: `engine=google_flights`, `departure_id`, `arrival_id`, `outbound_date` (`YYYY-MM-DD`), `type=2`, `currency`, `hl=en`, `adults`, `api_key`. | MUST |
 | DATA-04 | Do **not** send `return_date` (one-way). Ignore `departure_token` and `booking_token` in responses. | MUST |
-| DATA-05 | `outbound_date` must be **today or later** — a past date makes the search fail. The PDF example date `2026-02-15` is already in the past (today is 2026-09-14), so it **cannot** be used as-is. | MUST `[DECISION D-01]` |
+| DATA-05 | `outbound_date` must be **today or later** — a past date makes the search fail. The PDF example date `2026-02-15` was already in the past when this spec was written (2026-09-14), so it **cannot** be used as-is. | MUST `[DECISION D-01]` |
 | DATA-06 | All query values are built with `URLComponents`/`URLQueryItem` (no string concatenation). | SHOULD |
 
 `FlightSearchRequest` (Model, `Codable`, `Equatable`, `Sendable`) `[PDF p.4]`:
@@ -429,6 +429,8 @@ Promo cell "Learn more" tap
 
 ### 8.5 Proposed folder structure
 
+> Written before implementation. The built layout differs: no test target, `App/AppDependencies.swift` as the composition root, `Services/Debug/` for the stub and fixture services, and the key in `GoZayanProject/Config/Secrets.plist` instead of an xcconfig (§17).
+
 ```
 GoZayanProject/
 ├── App/                     AppDelegate, SceneDelegate
@@ -488,6 +490,8 @@ NOTES.md
 
 ### 10.2 Unit tests — cover the parts that don't need UIKit `[PDF p.5]`
 
+> **Dropped** — not part of the submission (§17). The table is kept as the original plan.
+
 Network is **stubbed/mocked**; tests never call the live API.
 
 | ID | Test | Priority |
@@ -519,40 +523,40 @@ Requires adding a **unit test target** (`GoZayanProjectTests`) — none exists t
 
 ## 11. Existing codebase audit
 
-Current state (branch `main`, 1 commit + uncommitted changes): Storyboard removed, programmatic window in `SceneDelegate`, empty `HomeViewController` (+ XIB), a generic `Network/` layer. **No Coordinator, ViewModel, models, tests, or feature UI yet.**
+State at the time of the audit (branch `main`, 1 commit + uncommitted changes): Storyboard removed, programmatic window in `SceneDelegate`, empty `HomeViewController` (+ XIB), a generic `Network/` layer. **No Coordinator, ViewModel, models, tests, or feature UI yet.**
 
 | ID | File | Finding | Why it matters | Required action |
 |---|---|---|---|---|
-| A-01 | `Network/HTTPClient.swift` | Builds a `URLRequest` (method, headers, body, cache policy) and then **ignores it** — calls `URLSession.shared.data(from: url)`. | Headers/method/body never sent. Classic AI-style bug reviewers look for. | Send the built `URLRequest` (`data(for: request)`). |
-| A-02 | `Network/HTTPClient.swift` | Custom `URLSession.data(from:)` extension re-implements an API Apple already ships (iOS 15+) with the same name. | Shadowing/ambiguity; redundant continuation code. | Delete the extension; use Foundation's async API. |
-| A-03 | `Network/HTTPClient.swift` | Manual `URLCache` read/write inside the generic client; key includes `api_key`; no TTL; would also cache "no results" bodies. | Mixed responsibilities, can serve stale data forever, not controllable in tests. | Move to `CachingFlightSearchService` decorator (CACHE-01..04). |
-| A-04 | `Network/HTTPClient.swift` | `try? JSONDecoder().decode` and `catch { return .failure(.unknown) }`. | Swallows `DecodingError` and `URLError` — can't tell offline from bad data. | Propagate typed errors (§4.3, DATA-12). |
-| A-05 | `Network/HTTPClient.swift` | Only 2xx / 401 handled. | 429 (quota) is realistic with a 100-search trial. | Map 401/403/429/5xx/other (§4.3). |
-| A-06 | `Network/HTTPClient.swift` | `URLSession.shared` hard-coded; `JSONDecoder` created inline. | Can't inject a stubbed session for T-NET-01. | Inject `URLSession` and decoder. |
-| A-07 | `Network/RequestError.swift` | `import UIKit` in a network error type; UI copy (`errorMessage`) lives in network layer; typo "Unknow  error". | Leaks UIKit into non-UI layers; mixes concerns. | `import Foundation`; move user messages to presentation (ERR-02). |
-| A-08 | `Network/Endpoint.swift` | `body: [String: String]?` only supports string values; unused for GET. | Minor. | Keep simple or remove for GET-only use. |
-| A-09 | `Network/*.swift` | File headers say `BS24TestProject` / another author, dated 2024. | Reviewers read the code and history; unexplained reused code hurts "code review judgment". | Rewrite or clearly disclose reuse in `NOTES.md`; fix headers. |
-| A-10 | `SceneDelegate.swift` | Instantiates `HomeViewController` directly; no Coordinator. | Violates ARCH-05. | Create/retain `AppCoordinator`. |
+| A-01 | `Network/HTTPClient.swift` | Builds a `URLRequest` (method, headers, body, cache policy) and then **ignores it** — calls `URLSession.shared.data(from: url)`. | Headers/method/body never sent. Classic AI-style bug reviewers look for. | ✅ Done. Send the built `URLRequest` (`data(for: request)`). |
+| A-02 | `Network/HTTPClient.swift` | Custom `URLSession.data(from:)` extension re-implements an API Apple already ships (iOS 15+) with the same name. | Shadowing/ambiguity; redundant continuation code. | ✅ Done. Delete the extension; use Foundation's async API. |
+| A-03 | `Network/HTTPClient.swift` | Manual `URLCache` read/write inside the generic client; key includes `api_key`; no TTL; would also cache "no results" bodies. | Mixed responsibilities, can serve stale data forever, not controllable in tests. | ✅ Done. Move to `CachingFlightSearchService` decorator (CACHE-01..04). |
+| A-04 | `Network/HTTPClient.swift` | `try? JSONDecoder().decode` and `catch { return .failure(.unknown) }`. | Swallows `DecodingError` and `URLError` — can't tell offline from bad data. | ✅ Done. Propagate typed errors (§4.3, DATA-12). |
+| A-05 | `Network/HTTPClient.swift` | Only 2xx / 401 handled. | 429 (quota) is realistic with a 100-search trial. | ✅ Done. Map 401/403/429/5xx/other (§4.3). |
+| A-06 | `Network/HTTPClient.swift` | `URLSession.shared` hard-coded; `JSONDecoder` created inline. | Can't inject a stubbed session for T-NET-01. | ✅ Done. Inject `URLSession` and decoder. |
+| A-07 | `Network/RequestError.swift` | `import UIKit` in a network error type; UI copy (`errorMessage`) lives in network layer; typo "Unknow  error". | Leaks UIKit into non-UI layers; mixes concerns. | ✅ Done. `import Foundation`; move user messages to presentation (ERR-02). |
+| A-08 | `Network/Endpoint.swift` | `body: [String: String]?` only supports string values; unused for GET. | Minor. | ✅ Done. Keep simple or remove for GET-only use. |
+| A-09 | `Network/*.swift` | File headers say `BS24TestProject` / another author, dated 2024. | Reviewers read the code and history; unexplained reused code hurts "code review judgment". | ✅ Done. Rewrite or clearly disclose reuse in `NOTES.md`; fix headers. |
+| A-10 | `SceneDelegate.swift` | Instantiates `HomeViewController` directly; no Coordinator. | Violates ARCH-05. | ✅ Done. Create/retain `AppCoordinator`. |
 | A-11 | `ViewController.swift`, `HomeScreen/*` | Leftover template `ViewController`; "Home" naming for a Flight Results screen; empty XIB. | Dead code / misleading names. | ✅ Done in UI step: deleted, replaced by programmatic `FlightResultsViewController`. |
-| A-12 | Build settings | `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`, `SWIFT_APPROACHABLE_CONCURRENCY = YES`, Swift 5 mode. | Every type (DTOs, mapper) is implicitly `@MainActor` → friction in tests/decoding. | Mark pure types `nonisolated` (ARCH-07). |
-| A-13 | Build settings | `IPHONEOS_DEPLOYMENT_TARGET = 26.2`; iPhone landscape + iPad enabled. | Reviewers on older Xcode/simulators may not run it; design is portrait phone. | Lower target (D-15); iPhone portrait only. |
-| A-14 | Project | No unit-test target. | Needed for extra credit. | Add `GoZayanProjectTests`. |
-| A-15 | Git | Changes uncommitted; only "Initial Commit". | History is scored; spec must visibly come first. | Commit current cleanup, then this spec, **before** prompting feature code. |
+| A-12 | Build settings | `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`, `SWIFT_APPROACHABLE_CONCURRENCY = YES`, Swift 5 mode. | Every type (DTOs, mapper) is implicitly `@MainActor` → friction in tests/decoding. | ✅ Done. Mark pure types `nonisolated` (ARCH-07). |
+| A-13 | Build settings | `IPHONEOS_DEPLOYMENT_TARGET = 26.2`; iPhone landscape + iPad enabled. | Reviewers on older Xcode/simulators may not run it; design is portrait phone. | ✅ Done. Lower target (D-15); iPhone portrait only. |
+| A-14 | Project | No unit-test target. | Needed for extra credit. | Dropped (§17). Add `GoZayanProjectTests`. |
+| A-15 | Git | Changes uncommitted; only "Initial Commit". | History is scored; spec must visibly come first. | ✅ Done. Commit current cleanup, then this spec, **before** prompting feature code. |
 
 ---
 
 ## 12. Decisions on open points `[PDF p.6]`
 
 > "Ask us, or decide for yourself and tell us why. A choice you can explain always beats a silent guess." — every row below must appear in `NOTES.md`.
-> **Items marked ❓ need confirmation from you before implementation starts.**
+> Items first marked ❓ needed confirmation before implementation; all are now resolved (✅). Where the final choice differs from the proposal, §17 wins.
 
 | ID | Open point | Proposed decision | Why |
 |---|---|---|---|
-| D-01 ❓ | Route & date | **DAC → BKK**, **1 adult**, **BDT**, `outbound_date = today + 30 days` (computed at launch). | Matches the brief's example route/currency. The example date (2026-02-15) is already in the past; a relative date keeps the app working whenever reviewers run it. Trade-off: local cache/fixture keys change daily → covered by fixture fallback. |
-| D-02 ❓ | Where the API key lives | Git-ignored `Secrets.xcconfig` → Info.plist → `APIKeyProvider`; DEBUG falls back to bundled fixture if key missing. | Key never in git; reviewers can run without their own key. |
+| D-01 ✅ | Route & date | **DAC → BKK**, **1 adult**, **BDT**, `outbound_date = today + 30 days` (computed at launch). | Matches the brief's example route/currency. The example date (2026-02-15) is already in the past; a relative date keeps the app working whenever reviewers run it. Trade-off: local cache/fixture keys change daily → covered by fixture fallback. |
+| D-02 ✅ | Where the API key lives | Git-ignored `Secrets.xcconfig` → Info.plist → `APIKeyProvider`; DEBUG falls back to bundled fixture if key missing. | Key never in git; reviewers can run without their own key. |
 | D-03 | Price format | `BDT 37,400` — ISO code, space, grouped integer, no decimals. | Exactly matches the brief's sample chip `BDT 70,129`; `NumberFormatter` currency style would give `৳` or locale-dependent output. |
 | D-04 | Merging `best_flights` + `other_flights` | Concatenate best then other, preserving API order; no dedupe; keep `source` on the model. Then apply sort (default Cheapest). | Google already separates them without overlap; keeping `source` allows a "Best" badge later without re-mapping. |
-| D-05 ❓ | What empty looks like | Not in Figma → our design: icon, "No flights found", "Try a different date or route.", "Search again" button. Header + strip remain. | Consistent with error layout; gives user a way forward. |
+| D-05 ✅ | What empty looks like | Not in Figma → our design: icon, "No flights found", "Try a different date or route.", "Search again" button. Header + strip remain. | Consistent with error layout; gives user a way forward. |
 | D-06 | Carousel position | After the 2nd flight card; after last if < 2. | "Between the flight cards" — visible without scrolling, doesn't push the first results off screen. |
 | D-07 | Missing price | Keep offer; show "Price unavailable"; sort last. | Dropping real flights silently is worse than showing them. |
 | D-08 | Header in non-success states | Always visible (built from request). | User always knows what was searched, even on error. |
@@ -560,9 +564,9 @@ Current state (branch `main`, 1 commit + uncommitted changes): Storyboard remove
 | D-10 | Date strip data | Hard-coded fares; dates generated around search date; selected = search date. | Satisfies "hard-coded dummy data" while keeping header and selected chip consistent. |
 | D-11 | Flight card tap | Reported to delegate (`didSelectFlight`), Coordinator does nothing. | Brief defines the delegate but no detail screen. |
 | D-12 | Promo images | Bundled assets. | Dummy data; no network or image-loading library needed. |
-| D-13 ❓ | How gozayaan.com opens | `SFSafariViewController` presented by the Coordinator. | Keeps user in-app; clearly "navigation through the Coordinator". Alternative: `UIApplication.shared.open` (leaves app). |
+| D-13 ✅ | How gozayaan.com opens | `SFSafariViewController` presented by the Coordinator. | Keeps user in-app; clearly "navigation through the Coordinator". Alternative: `UIApplication.shared.open` (leaves app). |
 | D-14 ✅ | UI framework / layout | UIKit, programmatic layout (empty XIB removed). | Project already UIKit + programmatic window; programmatic cells diff cleanly in reviews. |
-| D-15 ❓ | Deployment target / devices | iOS **16.0**, iPhone only, portrait. | async/await, `UIContentConfiguration`, compositional layout all available; runs on older simulators. |
+| D-15 ✅ | Deployment target / devices | iOS **16.0**, iPhone only, portrait. | async/await, `UIContentConfiguration`, compositional layout all available; runs on older simulators. |
 | D-16 | Dark mode | Force light unless Figma has dark variants. | Avoid unreviewed dark colours. |
 | D-17 | Third-party libraries | None. | Small scope; less for reviewers to audit. |
 | D-18 | Demonstrating all four states | DEBUG launch argument `-FlightsStubState`. | Reviewers "want to see all of them"; real API rarely yields empty/error on demand. |
@@ -634,31 +638,31 @@ Frames: **"Flight Result - After Search, One Way"** (loading), **"Flight Result 
 
 The task is done when **all** of the following are true:
 
-- [ ] **DoD-01** Fresh clone + key setup (or no key → fixture) builds and runs on an iPhone simulator.
-- [ ] **DoD-02** Route header shows origin → destination, date, passenger count, "One Way", Edit button (FR-01).
-- [ ] **DoD-03** Date strip scrolls horizontally, shows hard-coded fares, selected day highlighted, taps ignored (FR-02).
-- [ ] **DoD-04** Loading state shows shimmer skeleton cards (FR-03, ST-01).
-- [ ] **DoD-05** Success state shows flight cards with airline, depart/arrive time, duration, stops label, both airport codes, starting price (FR-04, ST-02).
-- [ ] **DoD-06** Discount carousel scrolls sideways between flight cards with image, title, Learn more (FR-05).
-- [ ] **DoD-07** Learn more opens gozayaan.com via the Coordinator only (FR-06).
-- [ ] **DoD-08** Empty state reachable (real 0-result response or stub) and shown correctly (ST-03).
-- [ ] **DoD-09** Error state reachable (offline / bad key / stub) with retry (ST-04).
-- [ ] **DoD-10** Live SerpApi one-way request works; `best_flights` + `other_flights` merged into one list of `FlightOffer` (DATA-*, MAP-01).
-- [ ] **DoD-11** Multi-leg itinerary shows **2 Stop** (MAP-02, MAP-03).
-- [ ] **DoD-12** ViewModel imports no UIKit and has no Coordinator reference; reports events via delegate/closure (ARCH-01..03).
-- [ ] **DoD-13** Navigation code exists only in Coordinators (ARCH, FR-06).
-- [ ] **DoD-14** Responses cached locally in development; tests never hit the network (CACHE-*).
-- [ ] **DoD-15** No API key in the repo or its history (KEY-01, DEL-08).
+- [x] **DoD-01** Fresh clone + key setup (or no key → fixture) builds and runs on an iPhone simulator.
+- [x] **DoD-02** Route header shows origin → destination, date, passenger count, "One Way", Edit button (FR-01).
+- [x] **DoD-03** Date strip scrolls horizontally, shows hard-coded fares, selected day highlighted, taps ignored (FR-02).
+- [x] **DoD-04** Loading state shows shimmer skeleton cards (FR-03, ST-01).
+- [x] **DoD-05** Success state shows flight cards with airline, depart/arrive time, duration, stops label, both airport codes, starting price (FR-04, ST-02).
+- [x] **DoD-06** Discount carousel scrolls sideways between flight cards with image, title, Learn more (FR-05).
+- [x] **DoD-07** Learn more opens gozayaan.com via the Coordinator only (FR-06).
+- [x] **DoD-08** Empty state reachable (real 0-result response or stub) and shown correctly (ST-03).
+- [x] **DoD-09** Error state reachable (offline / bad key / stub) with retry (ST-04).
+- [x] **DoD-10** Live SerpApi one-way request works; `best_flights` + `other_flights` merged into one list of `FlightOffer` (DATA-*, MAP-01).
+- [x] **DoD-11** Multi-leg itinerary shows **2 Stop** (MAP-02, MAP-03).
+- [x] **DoD-12** ViewModel imports no UIKit and has no Coordinator reference; reports events via delegate/closure (ARCH-01..03).
+- [x] **DoD-13** Navigation code exists only in Coordinators (ARCH, FR-06).
+- [x] **DoD-14** Responses cached locally in development; tests never hit the network (CACHE-*). *(No tests are submitted.)*
+- [x] **DoD-15** No API key in the repo or its history (KEY-01, DEL-08).
 - [ ] **DoD-16** UI matches the two Figma frames (FR-08).
 - [ ] **DoD-17** `/spec` folder, `NOTES.md` (AI tool, corrections/throw-aways, own architectural decisions, decisions from §12) present at repo root (DEL-02, DEL-04).
-- [ ] **DoD-18** Commit history is incremental and shows spec first (DEL-05, PROC-01).
+- [x] **DoD-18** Commit history is incremental and shows spec first (DEL-05, PROC-01).
 - [ ] **DoD-19** Repo pushed and link sent within 3 days of receiving the task (DEL-01, DEL-06).
-- [ ] *(Optional)* **DoD-20** Cheapest/Fastest sort in ViewModel, list updates in place (EXT-*).
-- [ ] *(Optional)* **DoD-21** Unit tests for mapping (incl. 2 Stop), state transitions, sort — all green with stubbed network (T-*).
+- [x] *(Optional)* **DoD-20** Cheapest/Fastest sort in ViewModel, list updates in place (EXT-*).
+- [ ] *(Optional)* **DoD-21** Unit tests for mapping (incl. 2 Stop), state transitions, sort — all green with stubbed network (T-*). *(Dropped, §17.)*
 
 ---
 
-## 17. Changes made during implementation (v3 · 2026-09-15)
+## 17. Changes made during implementation (v3–v4 · 2026-09-15)
 
 Each change below was forced by something verified while building (live API call, compiler, simulator, or tests). The rows above keep their original wording so the history of the spec stays readable; this table wins where they differ.
 
@@ -676,8 +680,12 @@ Each change below was forced by something verified while building (live API call
 | A-01…A-07 ✅ | Network layer rewritten: `URLSessionHTTPClient` sends the built request, injects its session, maps 401/403/429/5xx and offline errors to `RequestError`, and never swallows decoding errors. `RequestError` no longer imports UIKit or holds UI copy. | See §11. |
 | A-10 ✅, ARCH-05 | `SceneDelegate` retains `AppCoordinator`; `AppDependencies` is the composition root. | |
 | §10.2, A-14 | **Unit tests dropped** (extra credit, optional). A test suite was written and passing, then removed at the candidate's request. No test target in the project. | The candidate chose not to submit tests they would not be able to explain on the walkthrough call. The ViewModel stays testable (Foundation only, dependencies injected). |
+| D-15 ✅, UI-06, A-13 ✅ | **iOS 17.0**, iPhone only, portrait only (was iOS 26.2, iPhone + iPad, landscape). | 17.0 is the oldest runtime the app was actually run on (iOS 17.5 simulator); a 16.0 target would have been a guess. It builds with no availability errors. Xcode 26 is still required for the Swift 6.2 concurrency settings. |
+| UI-07, D-16 | Light appearance forced app-wide with `UIUserInterfaceStyle = Light`. | Figma has no dark design. Checked with the simulator in dark mode: the screen and the gozayaan.com Safari sheet stay light. |
+| DoD-11, MAP-02 | `-FlightsStubState success` adds one hand-made 3-leg itinerary (`Resources/StubMultiStopItinerary.json`, DAC → CCU → DEL → BKK) to the real fixture. | The captured DAC → BKK response has no 2-stop flight, and tests were dropped, so nothing else shows "2 Stop". The file goes through the same decoder and mapper as a live response; the real fixture stays unedited. |
+| DEL-05 | `xcuserdata/…/xcschememanagement.plist` removed from git. | It was committed before `.gitignore` covered it. |
 
 Facts confirmed from the live response (`Resources/FlightResultsFixture.json`, scrubbed): non-stop itineraries **omit** `layovers`; an itinerary can **omit** `price`; overnight arrivals are common; the body never contains the API key.
 
-Still open: **D-15** — deployment target is still iOS 26.2.
+Definition of Done checked 2026-09-15: Debug and Release builds with no warnings; simulator runs on iOS 17.5 and 26.3 covering all four states, the 2 Stop card, Learn more, and a copy of the repo without `Secrets.plist` (bundled fixture shown). The live request (DoD-10) and sorting (DoD-20) were checked in the simulator during implementation. Left open: **DoD-16** (side-by-side check against Figma), **DoD-17** (`NOTES.md` sections to be written by the candidate), **DoD-19** (push and send the link).
 
