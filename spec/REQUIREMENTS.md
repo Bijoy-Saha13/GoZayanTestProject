@@ -1,7 +1,7 @@
 # Flight Results — Requirements & Technical Spec
 
 > **Source of truth:** *iOS Take-Home Task — Flight Results* (GoZayaan, PDF, 6 pages) + SerpApi docs + Figma reference.
-> **Approach:** Option A — this spec is written **before** any AI prompting and is committed first, so the git history shows the spec preceding the implementation.
+> **Approach:** Option A — this spec was drafted with Claude Code from the brief and the existing code, and committed **before** any feature code, so the git history shows the spec preceding the implementation.
 > **Status:** v4 · 2026-09-15 — Figma captured (§13); implemented, with changes recorded in §17; gaps closed and Definition of Done checked (§16)
 
 ---
